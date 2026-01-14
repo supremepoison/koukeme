@@ -1,24 +1,21 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/simulation-lab/simulation-lab",
+    "pages/sos/sos",
+    "pages/coach/coach",
+    "pages/community/community",
+    "pages/profile/profile",
     "pages/logs/logs"
   ],
   "window": {
-    "navigationBarTextStyle": "black",
-    "navigationStyle": "custom"
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#667eea",
+    "navigationBarTitleText": "清醒时光",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#667eea"
   },
   "style": "v2",
-  "rendererOptions": {
-    "skyline": {
-      "defaultDisplayBlock": true,
-      "defaultContentBox": true,
-      "tagNameStyleIsolation": "legacy",
-      "disableABTest": true,
-      "sdkVersionBegin": "3.0.0",
-      "sdkVersionEnd": "15.255.255"
-    }
-  },
-  "componentFramework": "glass-easel",
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents"
 }

@@ -1,0 +1,55 @@
+/* app.wxss */
+page {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* 全局样式变量 */
+.container {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* 玻璃态卡片 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 32rpx rgba(31, 38, 135, 0.15);
+}
+
+/* 渐变按钮 */
+.btn-primary {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border-radius: 24rpx;
+  padding: 24rpx 48rpx;
+  text-align: center;
+  box-shadow: 0 12rpx 40rpx rgba(79, 172, 254, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24rpx;
+  padding: 20rpx 40rpx;
+  text-align: center;
+}
+
+/* 文本样式 */
+.text-primary {
+  color: #ffffff;
+}
+
+.text-secondary {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.6);
+}

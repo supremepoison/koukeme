@@ -1,0 +1,51 @@
+<!-- pages/community/community.wxml -->
+<view class="container">
+  <!-- 动态背景 -->
+  <view class="bg-pattern"></view>
+
+  <!-- 顶部导航 -->
+  <view class="header">
+    <text class="header-title">匿名树洞</text>
+    <button class="btn-post" bindtap="newPost">✨ 发心情</button>
+  </view>
+
+  <!-- 帖子列表 -->
+  <scroll-view class="feed" scroll-y>
+    <view class="post-card" wx:for="{{posts}}" wx:key="id">
+      <!-- 帖子头部 -->
+      <view class="post-header">
+        <view class="post-user">
+          <view class="user-avatar">{{item.avatar}}</view>
+          <view class="user-info">
+            <text class="user-name">{{item.name}}</text>
+            <text class="user-badge">第{{item.days}}天</text>
+          </view>
+        </view>
+        <text class="post-time">{{item.time}}</text>
+      </view>
+
+      <!-- 帖子内容 -->
+      <text class="post-content">{{item.content}}</text>
+
+      <!-- 帖子操作 -->
+      <view class="post-actions">
+        <view class="action-btn {{item.liked ? 'active' : ''}}" bindtap="toggleLight" data-index="{{index}}">
+          <text class="action-icon">✨</text>
+          <text>{{item.likes}}</text>
+        </view>
+        <view class="action-btn">
+          <text class="action-icon">💬</text>
+          <text>{{item.comments}}</text>
+        </view>
+        <view class="action-btn">
+          <text class="action-icon">❤️</text>
+          <text>{{item.hearts}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="load-more" wx:if="{{hasMore}}">
+      <text>继续加载...</text>
+    </view>
+  </scroll-view>
+</view>

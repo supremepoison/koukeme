@@ -1,0 +1,154 @@
+<!-- pages/profile/profile.wxml -->
+<view class="container">
+  <!-- 动态背景 -->
+  <view class="bg-pattern"></view>
+
+  <!-- 头部 -->
+  <view class="header">
+    <text class="header-title">我的</text>
+    <text class="header-subtitle">查看你的清醒历程</text>
+  </view>
+
+  <!-- 用户信息卡片 -->
+  <view class="profile-card">
+    <view class="avatar">🦁</view>
+    <text class="profile-name">清醒的狮子</text>
+    <text class="profile-id">ID: SL202601</text>
+    <view class="badges">
+      <view class="badge">🏆 30天达人</view>
+      <view class="badge">⭐ 活跃用户</view>
+      <view class="badge">💪 自控力提升</view>
+    </view>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-grid">
+    <view class="stat-card">
+      <text class="stat-value">¥1,500</text>
+      <text class="stat-label">省下的钱</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">45K</text>
+      <text class="stat-label">减少卡路里</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">85%</text>
+      <text class="stat-label">肝脏恢复</text>
+    </view>
+  </view>
+
+  <!-- 清醒天数卡片 -->
+  <view class="streak-card">
+    <text class="streak-number">30</text>
+    <text class="streak-label">连续清醒天数</text>
+  </view>
+
+  <!-- VIP 卡片 -->
+  <view class="vip-card">
+    <view class="vip-info">
+      <text class="vip-title">解锁超级会员</text>
+      <text class="vip-desc">高级肝脏皮肤 · 无限模拟 · AI深度咨询</text>
+    </view>
+    <button class="btn-vip" bindtap="upgradeVIP">升级</button>
+  </view>
+
+  <!-- 数据与报告 -->
+  <view class="menu-section">
+    <text class="menu-section-title">数据与报告</text>
+    <view class="menu-group">
+      <view class="menu-item" bindtap="viewReport">
+        <view class="menu-icon">📊</view>
+        <view class="menu-content">
+          <text class="menu-title">健康报告</text>
+          <text class="menu-subtitle">查看详细的恢复数据</text>
+        </view>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="viewHistory">
+        <view class="menu-icon">📅</view>
+        <view class="menu-content">
+          <text class="menu-title">打卡历史</text>
+          <text class="menu-subtitle">回顾你的清醒历程</text>
+        </view>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="viewAchievements">
+        <view class="menu-icon">🏆</view>
+        <view class="menu-content">
+          <text class="menu-title">成就系统</text>
+          <text class="menu-subtitle">已解锁 5/20 个成就</text>
+        </view>
+        <text class="menu-badge">NEW</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 设置 -->
+  <view class="menu-section">
+    <text class="menu-section-title">设置</text>
+    <view class="menu-group">
+      <view class="menu-item" bindtap="setReminder">
+        <view class="menu-icon">⏰</view>
+        <view class="menu-content">
+          <text class="menu-title">打卡提醒</text>
+          <text class="menu-subtitle">每天 21:00</text>
+        </view>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="setEmergencyContact">
+        <view class="menu-icon">📞</view>
+        <view class="menu-content">
+          <text class="menu-title">紧急联系人</text>
+          <text class="menu-subtitle">危机时刻一键求助</text>
+        </view>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="setPrivacy">
+        <view class="menu-icon">🔒</view>
+        <view class="menu-content">
+          <text class="menu-title">隐私设置</text>
+          <text class="menu-subtitle">管理你的数据</text>
+        </view>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 其他 -->
+  <view class="menu-section">
+    <text class="menu-section-title">其他</text>
+    <view class="menu-group">
+      <view class="menu-item" bindtap="viewAbout">
+        <view class="menu-icon">ℹ️</view>
+        <view class="menu-content">
+          <text class="menu-title">关于我们</text>
+          <text class="menu-subtitle">了解清醒时光</text>
+        </view>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="feedback">
+        <view class="menu-icon">💌</view>
+        <view class="menu-content">
+          <text class="menu-title">意见反馈</text>
+          <text class="menu-subtitle">帮助我们做得更好</text>
+        </view>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="share">
+        <view class="menu-icon">📤</view>
+        <view class="menu-content">
+          <text class="menu-title">分享给朋友</text>
+          <text class="menu-subtitle">帮助更多人保持清醒</text>
+        </view>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 版本信息 -->
+  <view class="version-info">
+    清醒时光 v1.1.0<text>\n</text>
+    本工具数据仅供参考，不作为医疗诊断依据
+  </view>
+</view>

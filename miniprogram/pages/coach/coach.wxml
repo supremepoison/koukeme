@@ -1,0 +1,58 @@
+<!-- pages/coach/coach.wxml -->
+<view class="container">
+  <!-- 动态背景 -->
+  <view class="bg-pattern"></view>
+
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="coach-avatar">🤖</view>
+    <view class="coach-info">
+      <text class="coach-name">清醒教练 <text class="status-dot"></text></text>
+      <text class="coach-desc">24小时在线，陪你度过难关</text>
+    </view>
+  </view>
+
+  <!-- 聊天区域 -->
+  <scroll-view class="chat-area" scroll-y scroll-into-view="chat-bottom" scroll-with-animation>
+    <view class="msg msg-ai" wx:for="{{messages}}" wx:key="index" wx:if="{{item.type === 'ai'}}">
+      <text>{{item.content}}</text>
+    </view>
+    <view class="msg msg-user" wx:for="{{messages}}" wx:key="index" wx:if="{{item.type === 'user'}}">
+      <text>{{item.content}}</text>
+    </view>
+    <view id="chat-bottom"></view>
+  </scroll-view>
+
+  <!-- HALT 快捷选项 -->
+  <view class="halt-section">
+    <text class="halt-label">现在是什么感觉？</text>
+    <view class="halt-chips">
+      <view class="chip" bindtap="sendHalt" data-text="我很饿">
+        <text class="chip-icon">🍔</text>饿了
+      </view>
+      <view class="chip" bindtap="sendHalt" data-text="我很生气">
+        <text class="chip-icon">😤</text>生气
+      </view>
+      <view class="chip" bindtap="sendHalt" data-text="我很孤独">
+        <text class="chip-icon">🥺</text>孤独
+      </view>
+      <view class="chip" bindtap="sendHalt" data-text="我很累">
+        <text class="chip-icon">😴</text>疲惫
+      </view>
+      <view class="chip" bindtap="sendHalt" data-text="有人劝酒">
+        <text class="chip-icon">🍻</text>有人劝酒
+      </view>
+    </view>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-wrapper">
+      <input class="chat-input" placeholder="输入你想聊的内容..." value="{{inputText}}" bindinput="onInput" confirm-type="send" bindconfirm="sendMsg" />
+      <view class="input-actions">
+        <button class="clear-btn" bindtap="clearInput" wx:if="{{inputText.length > 0}}">✕</button>
+        <button class="send-btn" bindtap="sendMsg">➤</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,425 @@
+/* pages/simulation-lab/simulation-lab.wxss */
+
+/* 变量 */
+page {
+  background: #1a1a2e;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* 动态背景 */
+.bg-pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at top, #2d2d44 0%, #1a1a2e 100%);
+  z-index: -2;
+}
+
+.bg-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.1) 0%, transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(240, 147, 251, 0.1) 0%, transparent 30%);
+  z-index: -1;
+  animation: bgFloat 15s ease-in-out infinite;
+}
+
+@keyframes bgFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-40rpx); }
+}
+
+/* 醉酒模糊覆盖 */
+.drunk-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  transition: backdrop-filter 0.5s;
+  z-index: 50;
+}
+
+/* 顶部导航 */
+.header {
+  padding: 120rpx 48rpx 40rpx;
+  text-align: center;
+  position: relative;
+  z-index: 100;
+}
+
+.exit-btn {
+  position: absolute;
+  top: 100rpx;
+  left: 48rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 40rpx;
+  transition: all 0.3s ease;
+  z-index: 200;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: 700;
+  margin-bottom: 16rpx;
+  background: linear-gradient(135deg, #ffffff 0%, #a5f3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.6);
+  display: block;
+}
+
+/* 模拟区域 */
+.sim-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+  position: relative;
+}
+
+/* 警告消息 */
+.warning-banner {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 107, 107, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  border-radius: 40rpx;
+  padding: 24rpx 48rpx;
+  font-size: 28rpx;
+  color: #ff6b6b;
+  font-weight: 600;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  25% { transform: translateX(-50%) translateY(-10rpx); }
+  75% { transform: translateX(-50%) translateY(10rpx); }
+}
+
+/* 肝脏展示 */
+.liver-showcase {
+  position: relative;
+  margin-bottom: 80rpx;
+}
+
+.liver-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 107, 107, 0.2);
+}
+
+.liver-ring:nth-child(1) {
+  width: 480rpx;
+  height: 480rpx;
+  animation: ringPulse 3s ease-in-out infinite;
+}
+
+.liver-ring:nth-child(2) {
+  width: 400rpx;
+  height: 400rpx;
+  animation: ringPulse 3s ease-in-out infinite 0.5s;
+}
+
+@keyframes ringPulse {
+  0%, 100% { opacity: 0.2; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.4; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+.liver-view {
+  width: 320rpx;
+  height: 320rpx;
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  border-radius: 50% 45% 50% 45%;
+  box-shadow: 0 40rpx 120rpx rgba(250, 112, 154, 0.4);
+  position: relative;
+  z-index: 10;
+  transition: all 0.5s ease;
+  animation: liverBreath 3s ease-in-out infinite;
+}
+
+@keyframes liverBreath {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.liver-view.damaged {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  box-shadow: 0 40rpx 120rpx rgba(45, 55, 72, 0.5);
+  animation: liverTwitch 0.3s infinite;
+}
+
+@keyframes liverTwitch {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(4rpx, -4rpx); }
+  75% { transform: translate(-4rpx, 4rpx); }
+}
+
+/* 酒杯容器 */
+.glass-container {
+  width: 200rpx;
+  height: 280rpx;
+  border: 6rpx solid rgba(255, 255, 255, 0.3);
+  border-top: none;
+  border-radius: 0 0 40rpx 40rpx;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10rpx);
+}
+
+.liquid {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0%;
+  transition: height 0.3s ease, background 0.3s ease;
+}
+
+.liquid::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+/* 解酒按钮 */
+.redemption {
+  position: absolute;
+  top: 40rpx;
+  right: 40rpx;
+  z-index: 50;
+}
+
+.btn-water {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border: none;
+  padding: 24rpx 40rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  box-shadow: 0 16rpx 48rpx rgba(79, 172, 254, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-water:active {
+  transform: scale(0.95);
+  box-shadow: 0 8rpx 32rpx rgba(79, 172, 254, 0.3);
+}
+
+/* 控制区域 */
+.controls {
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(20px);
+  padding: 48rpx;
+  border-radius: 48rpx 48rpx 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 酒类选择 */
+.drink-selector {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 48rpx;
+  gap: 16rpx;
+}
+
+.drink-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  padding: 24rpx;
+  border-radius: 32rpx;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.drink-opt.active {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transform: translateY(-4rpx);
+}
+
+.drink-emoji {
+  font-size: 72rpx;
+  margin-bottom: 12rpx;
+}
+
+.drink-name {
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.drink-damage {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4rpx;
+}
+
+/* 操作按钮 */
+.action-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.btn-pour {
+  width: 100%;
+  padding: 32rpx;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 32rpx;
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+
+.btn-pour:active {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(0.98);
+}
+
+.btn-drink {
+  width: 100%;
+  padding: 40rpx;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+  border: none;
+  border-radius: 40rpx;
+  color: white;
+  font-size: 36rpx;
+  font-weight: 700;
+  user-select: none;
+  box-shadow: 0 24rpx 80rpx rgba(238, 90, 90, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-drink:active {
+  transform: scale(0.98);
+  box-shadow: 0 16rpx 60rpx rgba(238, 90, 90, 0.3);
+}
+
+/* 提示信息 */
+.tip-text {
+  text-align: center;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 32rpx;
+  line-height: 1.6;
+}
+
+/* 结果弹窗 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.result-modal {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 48rpx;
+  padding: 64rpx;
+  text-align: center;
+  max-width: 600rpx;
+  animation: modalPop 0.3s ease;
+  box-shadow: 0 80rpx 240rpx rgba(0, 0, 0, 0.3);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-icon {
+  font-size: 128rpx;
+  margin-bottom: 32rpx;
+  display: block;
+}
+
+.modal-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+.modal-desc {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 40rpx;
+  display: block;
+}
+
+.modal-btn {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border: none;
+  padding: 28rpx 64rpx;
+  border-radius: 40rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 16rpx 48rpx rgba(79, 172, 254, 0.3);
+}
+
+.modal-btn:active {
+  transform: scale(0.95);
+}

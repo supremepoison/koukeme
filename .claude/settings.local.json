@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(for:*)",
+      "Bash(do echo:*)",
+      "Bash(done:*)",
+      "Bash(do cp:*)",
+      "Bash(file:*)",
+      "Bash(printf:*)"
+    ]
+  }
+}

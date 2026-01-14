@@ -1,0 +1,58 @@
+<!-- pages/sos/sos.wxml -->
+<view class="container">
+  <!-- 动态背景 -->
+  <view class="bg-pattern"></view>
+
+  <!-- 顶部导航 -->
+  <navigator url="/pages/index/index" class="exit-btn">✕</navigator>
+
+  <!-- 头部 -->
+  <view class="header">
+    <text class="header-icon">💜</text>
+    <text class="header-title">深呼吸，这会过去的</text>
+    <text class="header-subtitle">你现在很勇敢，面对了这股冲动。<text>\n</text>我们来一起度过这个时刻。</text>
+  </view>
+
+  <!-- 呼吸练习 -->
+  <view class="breath-section">
+    <text class="breath-title">4-7-8 呼吸法</text>
+    <view class="circle-container">
+      <view class="breath-ring"></view>
+      <view class="breath-ring"></view>
+      <view class="breath-circle {{breathClass}}"></view>
+      <text class="breath-text">{{breathText}}</text>
+    </view>
+    <button class="btn-breath" bindtap="toggleBreathing">
+      {{isBreathing ? '停止' : '开始呼吸练习'}}
+    </button>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="quick-actions">
+    <view class="action-card" bindtap="playAudio">
+      <text class="action-icon">🎵</text>
+      <text class="action-title">正念音频</text>
+      <text class="action-desc">5分钟安抚</text>
+    </view>
+    <view class="action-card" bindtap="sendLocation">
+      <text class="action-icon">📍</text>
+      <text class="action-title">发送位置</text>
+      <text class="action-desc">通知守护者</text>
+    </view>
+  </view>
+
+  <!-- 紧急求助 -->
+  <view class="emergency-section">
+    <text class="emergency-title">需要立即帮助吗？</text>
+    <text class="emergency-desc">如果你感到非常危险，请立即拨打专业支持。</text>
+    <button class="btn-emergency" bindtap="callHotline">拨打求助热线</button>
+  </view>
+
+  <!-- 支持信息 -->
+  <view class="support-info">
+    心理健康热线：<text class="link">400-XXX-XXXX</text><text>\n</text>
+    戒酒互助组织：<text class="link">www.xx.org</text><text>\n</text><text>\n</text>
+    记住：你并不孤单，<text>\n</text>
+    我们一直在这里支持你。
+  </view>
+</view>

@@ -1,42 +1,129 @@
-# 微信小程序相关
+# ============================================
+# 微信小程序项目 .gitignore
+# ============================================
+
+# 依赖包
 node_modules/
 miniprogram_npm/
 .npm/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
-# 编译输出
+# 微信开发者工具生成的文件
+project.private.config.json
+*.wxapkg
+*.wxss.map
+
+# 编译输出和构建产物
 dist/
 build/
+*.js.map
+*.css.map
+*.d.ts.map
+
+# TypeScript 编译输出
+# 注意：微信小程序需要 .js 文件作为入口，所以保留编译后的 .js 文件
+# 如果项目使用纯 TypeScript 且不需要保留 .js 文件，可以取消下面的注释
+# *.js
+# !app.js
+# !miniprogram/**/*.js
 
 # 日志文件
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # 系统文件
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+Desktop.ini
 
-# IDE 配置（可选，根据团队需要）
-# .vscode/
-# .idea/
-# *.swp
-# *.swo
-# *~
+# IDE 配置（根据团队需要选择是否忽略）
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
 # 环境变量
 .env
 .env.local
 .env.*.local
+.env.development
+.env.production
+.env.test
 
 # 临时文件
 *.tmp
 *.temp
 .cache/
+.temp/
+.tmp/
+*.bak
+*.backup
+*~
 
-# 微信开发者工具生成的文件
-project.private.config.json
+# 测试覆盖率
+coverage/
+.nyc_output/
+*.lcov
+.jest/
 
-# 其他
+# 微信云开发
+cloudfunctions/
+cloud/
+.tea/
+
+# 本地调试文件
+.local/
+
+# 压缩文件
 *.zip
 *.tar.gz
+*.rar
+*.7z
+
+# 操作系统特定文件
+.AppleDouble
+.LSOverride
+
+# Windows
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# macOS
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+.directory
+.Trash-*
+
+# 原型文件（可选，如果不需要版本控制）
+# prototype/

@@ -1,0 +1,95 @@
+<!-- pages/simulation-lab/simulation-lab.wxml -->
+<view class="container">
+  <!-- 动态背景 -->
+  <view class="bg-pattern"></view>
+  <view class="bg-particles"></view>
+
+  <!-- 醉酒模糊覆盖 -->
+  <view class="drunk-overlay" style="backdrop-filter: blur({{drunkBlur}}px)"></view>
+
+  <!-- 顶部导航 -->
+  <navigator url="/pages/index/index" class="exit-btn">✕</navigator>
+
+  <view class="header">
+    <text class="title">后果模拟室</text>
+    <text class="subtitle">在虚拟世界体验，在现实世界清醒</text>
+  </view>
+
+  <!-- 模拟区域 -->
+  <view class="sim-area">
+    <!-- 警告横幅 -->
+    <view class="warning-banner" wx:if="{{showWarning}}">
+      ⚠️ 混饮导致吸收率提升 200%！
+    </view>
+
+    <!-- 肝脏展示 -->
+    <view class="liver-showcase">
+      <view class="liver-ring"></view>
+      <view class="liver-ring"></view>
+      <view class="liver-view {{liverClass}}" style="filter: brightness({{100 - damageLevel}}%) saturate({{100 + damageLevel * 0.5}}%)"></view>
+
+      <!-- 解酒按钮 -->
+      <view class="redemption" wx:if="{{showRedemption}}">
+        <button class="btn-water" bindtap="restore">💧 喝水解酒</button>
+      </view>
+    </view>
+
+    <!-- 酒杯容器 -->
+    <view class="glass-container">
+      <view class="liquid" style="height: {{liquidHeight}}%; background: {{drinkColor}}"></view>
+    </view>
+  </view>
+
+  <!-- 控制区域 -->
+  <view class="controls">
+    <!-- 酒类选择 -->
+    <view class="drink-selector">
+      <view class="drink-opt {{currentType === 'beer' ? 'active' : ''}}" bindtap="selectDrink" data-type="beer" data-color="#ffd700" data-damage="10">
+        <text class="drink-emoji">🍺</text>
+        <text class="drink-name">啤酒</text>
+        <text class="drink-damage">轻度伤害</text>
+      </view>
+      <view class="drink-opt {{currentType === 'wine' ? 'active' : ''}}" bindtap="selectDrink" data-type="wine" data-color="#8b0000" data-damage="25">
+        <text class="drink-emoji">🍷</text>
+        <text class="drink-name">红酒</text>
+        <text class="drink-damage">中度伤害</text>
+      </view>
+      <view class="drink-opt {{currentType === 'whiskey' ? 'active' : ''}}" bindtap="selectDrink" data-type="whiskey" data-color="#daa520" data-damage="40">
+        <text class="drink-emoji">🥃</text>
+        <text class="drink-name">威士忌</text>
+        <text class="drink-damage">重度伤害</text>
+      </view>
+      <view class="drink-opt {{currentType === 'white' ? 'active' : ''}}" bindtap="selectDrink" data-type="white" data-color="#eee" data-damage="60">
+        <text class="drink-emoji">🍶</text>
+        <text class="drink-name">白酒</text>
+        <text class="drink-damage">严重伤害</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-btns">
+      <button class="btn-pour" bindtap="pour">倒入杯中</button>
+      <button class="btn-drink" bindtouchstart="startDrinking" bindtouchend="stopDrinking" bindlongpress="stopDrinking">长按酒杯饮用</button>
+    </view>
+
+    <!-- 提示信息 -->
+    <view class="tip-text">
+      想喝酒的时候，来这里看看后果<text>\n</text>
+      在虚拟世界你可以重来，但现实的肝脏只有一个
+    </view>
+  </view>
+</view>
+
+<!-- 结果弹窗 -->
+<view class="overlay" wx:if="{{showResult}}" bindtap="closeModal">
+  <view class="result-modal" catchtap="">
+    <text class="modal-icon">💡</text>
+    <text class="modal-title">模拟结束</text>
+    <text class="modal-desc">
+      在虚拟世界，你可以无限次重来。<text>\n</text><text>\n</text>
+      但在现实中，你的肝脏只有这一个。<text>\n</text><text>\n</text>
+      现在清醒，就是最好的选择。
+    </text>
+    <button class="modal-btn" bindtap="closeModal">我明白了</button>
+  </view>
+</view>

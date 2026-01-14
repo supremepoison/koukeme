@@ -1,28 +1,205 @@
-<!--index.wxml-->
-<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
+<view class="container">
+  <view class="bg-pattern"></view>
+
+  <view class="tip-card">
+    <text class="tip-icon">💡</text>
+    <text class="tip-text">{{currentTip}}</text>
+  </view>
+
+  <view class="header">
+    <view class="sobriety-time">
+      <text class="time-label">已清醒</text>
+      <view class="time-display">
+        <view class="time-unit">
+          <text class="time-value">{{sobrietyTime.days}}</text>
+          <text class="time-unit-text">天</text>
         </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
-    </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
+        <text class="time-separator">:</text>
+        <view class="time-unit">
+          <text class="time-value">{{sobrietyTime.hours}}</text>
+          <text class="time-unit-text">时</text>
+        </view>
+        <text class="time-separator">:</text>
+        <view class="time-unit">
+          <text class="time-value">{{sobrietyTime.minutes}}</text>
+          <text class="time-unit-text">分</text>
+        </view>
+        <text class="time-separator">:</text>
+        <view class="time-unit">
+          <text class="time-value">{{sobrietyTime.seconds}}</text>
+          <text class="time-unit-text">秒</text>
+        </view>
+      </view>
     </view>
   </view>
-</scroll-view>
+
+  <view class="stats-section">
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-icon">💰</text>
+        <text class="stat-value">¥{{savedMoney}}</text>
+        <text class="stat-label">省下的钱</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-icon">🔥</text>
+        <text class="stat-value">{{savedCalories}}K</text>
+        <text class="stat-label">减少卡路里</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-icon">⭐</text>
+        <text class="stat-value">12</text>
+        <text class="stat-label">获得成就</text>
+      </view>
+      <navigator url="/pages/simulation-lab/simulation-lab" class="stat-item stat-item-thirsty">
+        <text class="stat-icon">🧪</text>
+        <text class="stat-value">赛博喝酒</text>
+      </navigator>
+    </view>
+  </view>
+
+  <view class="body-status-section">
+    <view class="status-header">身体状态</view>
+    <view class="status-image-container" bindtap="showStatusDetail">
+      <image class="status-image" src="{{bodyStatus.image}}" mode="aspectFit"></image>
+      <view class="status-level-badge level-{{bodyStatus.level}}">
+        {{bodyStatus.levelText}}
+      </view>
+    </view>
+    <view class="status-info">
+      <text class="status-title">{{bodyStatus.title}}</text>
+      <text class="status-desc">{{bodyStatus.description}}</text>
+    </view>
+  </view>
+
+  <view class="checkin-section">
+    <button class="btn-checkin" bindtap="handleCheckIn" loading="{{loading}}">
+      <text class="btn-text" wx:if="{{!loading}}">今日清醒打卡</text>
+      <text class="spinner" wx:else></text>
+    </button>
+  </view>
+
+  <view class="secondary-section">
+    <button class="btn-record" bindtap="handleRecordDrink">今天没坚持住？记录一下</button>
+  </view>
+
+  <navigator url="/pages/sos/sos" class="sos-button">SOS</navigator>
+
+  <view class="bottom-nav">
+    <navigator class="nav-item active" url="/pages/index/index" hover-class="">
+      <text class="nav-icon">🏠</text>
+      <text class="nav-label">首页</text>
+    </navigator>
+    <navigator class="nav-item" url="/pages/coach/coach" hover-class="">
+      <text class="nav-icon">💬</text>
+      <text class="nav-label">教练</text>
+    </navigator>
+    <navigator class="nav-item" url="/pages/community/community" hover-class="">
+      <text class="nav-icon">👥</text>
+      <text class="nav-label">社区</text>
+    </navigator>
+    <navigator class="nav-item" url="/pages/profile/profile" hover-class="">
+      <text class="nav-icon">👤</text>
+      <text class="nav-label">我的</text>
+    </navigator>
+  </view>
+</view>
+
+<view class="overlay {{showAchievement ? 'show' : ''}}" wx:if="{{showAchievement}}" bindtap="hideAchievement">
+  <view class="achievement-popup {{showAchievement ? 'show' : ''}}" catchtap="hideAchievement">
+    <text class="achievement-icon">🏆</text>
+    <text class="achievement-title">解锁新成就！</text>
+    <text class="achievement-desc">{{achievementDesc}}</text>
+  </view>
+</view>
+
+<!-- 饮酒记录弹窗 -->
+<view class="overlay {{showDrinkModal ? 'show' : ''}}" wx:if="{{showDrinkModal}}" bindtap="closeDrinkModal">
+  <view class="drink-modal {{showDrinkModal ? 'show' : ''}}" catchtap="">
+    <view class="modal-header">
+      <text class="modal-title">记录饮酒信息</text>
+      <text class="modal-close" bindtap="closeDrinkModal">×</text>
+    </view>
+
+    <view class="modal-body">
+      <!-- 酒的类型 -->
+      <view class="form-group">
+        <text class="form-label required">酒的类型 *</text>
+        <picker
+          mode="selector"
+          range="{{alcoholTypes}}"
+          value="{{alcoholTypeIndex}}"
+          bindchange="onAlcoholTypeChange"
+        >
+          <view class="form-picker {{errors.type ? 'error' : ''}}">
+            <text class="picker-text">{{drinkForm.typeName || '请选择酒的类别'}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+        <text class="form-error" wx:if="{{errors.type}}">{{errors.type}}</text>
+      </view>
+
+      <!-- 酒的名字 -->
+      <view class="form-group">
+        <text class="form-label">酒的名字</text>
+        <input
+          class="form-input {{errors.name ? 'error' : ''}}"
+          placeholder="如：青岛啤酒、茅台等"
+          value="{{drinkForm.name}}"
+          bindinput="onDrinkNameInput"
+          maxlength="20"
+        />
+        <text class="form-error" wx:if="{{errors.name}}">{{errors.name}}</text>
+      </view>
+
+      <!-- 酒的量 -->
+      <view class="form-group">
+        <text class="form-label required">酒的量 *</text>
+        <view class="amount-input-wrapper">
+          <input
+            class="form-input {{errors.amount ? 'error' : ''}}"
+            type="digit"
+            placeholder="请输入数量"
+            value="{{drinkForm.amount}}"
+            bindinput="onDrinkAmountInput"
+          />
+          <text class="amount-unit">{{drinkForm.unit || 'ml'}}</text>
+        </view>
+        <text class="form-hint">合理范围: {{amountRange}}</text>
+        <text class="form-error" wx:if="{{errors.amount}}">{{errors.amount}}</text>
+      </view>
+
+      <!-- 饮酒时间 -->
+      <view class="form-group">
+        <text class="form-label">饮酒时间</text>
+        <picker
+          mode="time"
+          value="{{drinkForm.time}}"
+          bindchange="onDrinkTimeChange"
+        >
+          <view class="form-picker">
+            <text class="picker-text">{{drinkForm.time || '选择时间'}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 备注 -->
+      <view class="form-group">
+        <text class="form-label">备注</text>
+        <textarea
+          class="form-textarea"
+          placeholder="如：聚会、应酬、情绪状态等"
+          value="{{drinkForm.remark}}"
+          bindinput="onDrinkRemarkInput"
+          maxlength="100"
+        />
+        <text class="form-char-count">{{drinkForm.remark.length}}/100</text>
+      </view>
+    </view>
+
+    <view class="modal-footer">
+      <button class="btn-modal-cancel" bindtap="closeDrinkModal">取消</button>
+      <button class="btn-modal-confirm" bindtap="submitDrinkRecord">确认记录</button>
+    </view>
+  </view>
+</view>
