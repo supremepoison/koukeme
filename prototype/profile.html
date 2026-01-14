@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的 - 清醒时光</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 414px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      padding-bottom: 70px;
+    }
+
+    /* 用户头部卡片 */
+    .profile-header {
+      background: linear-gradient(135deg, #0052d9 0%, #0084f4 100%);
+      padding: 40px 20px 30px;
+      color: white;
+      position: relative;
+    }
+
+    .profile-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .user-avatar-large {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      border: 3px solid white;
+      margin-right: 15px;
+    }
+
+    .user-details {
+      flex: 1;
+    }
+
+    .user-nickname {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .user-id {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .achievement-badges {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .badge {
+      padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      font-size: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .streak-card {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .streak-number {
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .streak-label {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    /* 统计面板 */
+    .stats-panel {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      padding: 20px;
+      background: white;
+      margin: -20px 15px 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0052d9;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* 菜单区域 */
+    .menu-section {
+      padding: 0 15px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      color: #999;
+      margin: 20px 5px 10px;
+      font-weight: bold;
+    }
+
+    .menu-group {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-item:hover {
+      background: #f8f9fa;
+    }
+
+    .menu-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-right: 15px;
+    }
+
+    .menu-content {
+      flex: 1;
+    }
+
+    .menu-title {
+      font-size: 15px;
+      color: #333;
+      margin-bottom: 3px;
+    }
+
+    .menu-subtitle {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .menu-arrow {
+      color: #ccc;
+      font-size: 20px;
+    }
+
+    .menu-badge {
+      background: #ff4757;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      margin-right: 10px;
+    }
+
+    /* 图表预览 */
+    .chart-preview {
+      height: 150px;
+      background: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 100%);
+      border-radius: 12px;
+      margin: 15px;
+      padding: 20px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      gap: 5px;
+    }
+
+    .chart-bar {
+      flex: 1;
+      background: linear-gradient(180deg, #0052d9 0%, #0084f4 100%);
+      border-radius: 4px 4px 0 0;
+      min-height: 20px;
+      transition: all 0.3s;
+    }
+
+    .chart-bar:hover {
+      opacity: 0.8;
+    }
+
+    /* 版本信息 */
+    .version-info {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+      font-size: 12px;
+    }
+
+    /* 底部导航栏 */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 414px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      background: white;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      padding: 10px 0;
+      z-index: 999;
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #999;
+      transition: color 0.3s;
+    }
+
+    .tab-item.active {
+      color: #0052d9;
+    }
+
+    .tab-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .tab-label {
+      font-size: 11px;
+    }
+
+    /* 会员卡片 */
+    .vip-card {
+      background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+      margin: 15px;
+      padding: 20px;
+      border-radius: 16px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(255, 107, 157, 0.3);
+    }
+
+    .vip-info {
+      flex: 1;
+    }
+
+    .vip-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .vip-desc {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .vip-btn {
+      padding: 8px 20px;
+      background: white;
+      color: #ff6b9d;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .vip-btn:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 用户头部 -->
+    <div class="profile-header">
+      <div class="profile-info">
+        <div class="user-avatar-large">🦁</div>
+        <div class="user-details">
+          <div class="user-nickname">清醒的狮子</div>
+          <div class="user-id">ID: SL202601</div>
+          <div class="achievement-badges">
+            <span class="badge">🏆 30天达人</span>
+            <span class="badge">⭐ 活跃用户</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="streak-card">
+        <div class="streak-number">15</div>
+        <div class="streak-label">🔥 连续清醒天数</div>
+      </div>
+    </div>
+
+    <!-- 统计面板 -->
+    <div class="stats-panel">
+      <div class="stat-box">
+        <div class="stat-value">¥450</div>
+        <div class="stat-label">省下的钱</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value">3200</div>
+        <div class="stat-label">减少卡路里</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value">85%</div>
+        <div class="stat-label">肝脏恢复</div>
+      </div>
+    </div>
+
+    <!-- 会员卡片 -->
+    <div class="vip-card">
+      <div class="vip-info">
+        <div class="vip-title">解锁会员功能</div>
+        <div class="vip-desc">超级肝脏皮肤 · 无限模拟 · AI深度咨询</div>
+      </div>
+      <button class="vip-btn" onclick="upgradeVIP()">升级</button>
+    </div>
+
+    <!-- 健康趋势图表 -->
+    <div class="menu-section">
+      <div class="section-title">健康趋势</div>
+      <div class="chart-preview">
+        <div class="chart-bar" style="height: 40%;"></div>
+        <div class="chart-bar" style="height: 60%;"></div>
+        <div class="chart-bar" style="height: 80%;"></div>
+        <div class="chart-bar" style="height: 70%;"></div>
+        <div class="chart-bar" style="height: 90%;"></div>
+        <div class="chart-bar" style="height: 100%;"></div>
+        <div class="chart-bar" style="height: 95%;"></div>
+      </div>
+    </div>
+
+    <!-- 功能菜单 -->
+    <div class="menu-section">
+      <div class="section-title">数据与报告</div>
+      <div class="menu-group">
+        <div class="menu-item" onclick="viewReport()">
+          <div class="menu-icon" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">📊</div>
+          <div class="menu-content">
+            <div class="menu-title">健康报告</div>
+            <div class="menu-subtitle">查看详细的恢复数据</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="viewHistory()">
+          <div class="menu-icon" style="background: linear-gradient(135deg, #0052d9 0%, #0084f4 100%);">📅</div>
+          <div class="menu-content">
+            <div class="menu-title">打卡历史</div>
+            <div class="menu-subtitle">回顾你的清醒历程</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="viewAchievements()">
+          <div class="menu-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">🏆</div>
+          <div class="menu-content">
+            <div class="menu-title">成就系统</div>
+            <div class="menu-subtitle">已解锁 5/20 个成就</div>
+          </div>
+          <span class="menu-badge">NEW</span>
+          <div class="menu-arrow">›</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 设置菜单 -->
+    <div class="menu-section">
+      <div class="section-title">设置</div>
+      <div class="menu-group">
+        <div class="menu-item" onclick="setReminder()">
+          <div class="menu-icon">⏰</div>
+          <div class="menu-content">
+            <div class="menu-title">打卡提醒</div>
+            <div class="menu-subtitle">每天 21:00</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="setEmergencyContact()">
+          <div class="menu-icon" style="background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);">📞</div>
+          <div class="menu-content">
+            <div class="menu-title">紧急联系人</div>
+            <div class="menu-subtitle">危机时刻一键求助</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="setPrivacy()">
+          <div class="menu-icon">🔒</div>
+          <div class="menu-content">
+            <div class="menu-title">隐私设置</div>
+            <div class="menu-subtitle">管理你的数据</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 其他菜单 -->
+    <div class="menu-section">
+      <div class="section-title">其他</div>
+      <div class="menu-group">
+        <div class="menu-item" onclick="viewAbout()">
+          <div class="menu-icon">ℹ️</div>
+          <div class="menu-content">
+            <div class="menu-title">关于我们</div>
+            <div class="menu-subtitle">了解清醒时光</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="feedback()">
+          <div class="menu-icon">💌</div>
+          <div class="menu-content">
+            <div class="menu-title">意见反馈</div>
+            <div class="menu-subtitle">帮助我们做得更好</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+
+        <div class="menu-item" onclick="share()">
+          <div class="menu-icon">📤</div>
+          <div class="menu-content">
+            <div class="menu-title">分享给朋友</div>
+            <div class="menu-subtitle">帮助更多人保持清醒</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 版本信息 -->
+    <div class="version-info">
+      清醒时光 v1.1.0<br>
+      本工具数据仅供参考，不作为医疗诊断依据
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+      <div class="tab-item" onclick="location.href='index.html'">
+        <div class="tab-icon">🏠</div>
+        <div class="tab-label">首页</div>
+      </div>
+      <div class="tab-item" onclick="location.href='coach.html'">
+        <div class="tab-icon">💬</div>
+        <div class="tab-label">AI教练</div>
+      </div>
+      <div class="tab-item" onclick="location.href='community.html'">
+        <div class="tab-icon">👥</div>
+        <div class="tab-label">社区</div>
+      </div>
+      <div class="tab-item active">
+        <div class="tab-icon">👤</div>
+        <div class="tab-label">我的</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function upgradeVIP() {
+      alert('会员功能\n\n💎 超级会员特权：\n• 超级肝脏皮肤（5款精美皮肤）\n• 无限次模拟体验\n• AI深度咨询（每日不限次数）\n• 专属成就徽章\n• 数据云端备份\n\n价格：¥68/年');
+    }
+
+    function viewReport() {
+      alert('健康报告\n\n📊 你的恢复进度：\n\n肝脏健康度：85%\n脂肪肝风险：↓ 15%\n肝酶指标：趋于正常\n睡眠质量：提升 20%\n\n继续保持，肝脏正在快速恢复！');
+    }
+
+    function viewHistory() {
+      alert('打卡历史\n\n📅 本月打卡记录：\n\n✅ 连续打卡 15 天\n🏆 本月最长记录 15 天\n📈 成功率 100%\n\n你做得太棒了！继续保持！');
+    }
+
+    function viewAchievements() {
+      alert('成就系统\n\n🏆 已解锁成就：\n\n✓ 清醒新人（1天）\n✓ 坚持一周（7天）\n✓ 半月达人（15天）\n✓ 社区之星（获得50个点亮）\n✓ 模拟室体验官（完成10次模拟）\n\n🔒 待解锁成就：\n• 月度冠军（30天）\n• 三月挑战（90天）\n• 年度英雄（365天）\n...');
+    }
+
+    function setReminder() {
+      alert('打卡提醒设置\n\n当前提醒时间：每天 21:00\n\n你可以自定义提醒时间，帮助养成打卡习惯。');
+    }
+
+    function setEmergencyContact() {
+      alert('紧急联系人设置\n\n当你点击SOS按钮时，可以一键拨打预设的紧急联系人电话。\n\n建议设置：\n• 家人/朋友电话\n• 心理咨询热线\n• 戒酒互助热线');
+    }
+
+    function setPrivacy() {
+      alert('隐私设置\n\n🔒 你的隐私我们很重视：\n\n• 所有数据仅存储在本地\n• 社区发帖完全匿名\n• 可随时导出/删除数据\n• 不会与第三方共享');
+    }
+
+    function viewAbout() {
+      alert('关于清醒时光\n\n一款"可视化、游戏化、AI化"的口袋戒酒教练。\n\n通过生命肝脏、模拟室、AI教练等创新功能，帮助你看见伤害、体验后果、获得支持。\n\n版本：v1.1.0\n团队：[bowei]');
+    }
+
+    function feedback() {
+      alert('意见反馈\n\n感谢你的反馈！\n\n请告诉我们：\n• 你最喜欢哪个功能？\n• 有什么改进建议？\n• 遇到了什么问题？\n\n我们会认真听取每一条建议。');
+    }
+
+    function share() {
+      alert('分享清醒时光\n\n如果这个工具帮助了你，\n也许它也能帮助你的朋友。\n\n一起保持清醒，一起变得更好！💪');
+    }
+  </script>
+</body>
+</html>

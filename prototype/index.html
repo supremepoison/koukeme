@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>清醒时光 - 首页</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(180deg, #f5f5f5 0%, #ffffff 100%);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .container {
+      max-width: 414px;
+      margin: 0 auto;
+      background: #fff;
+      min-height: 100vh;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    /* 顶部状态栏 */
+    .header {
+      background: linear-gradient(135deg, #0052d9 0%, #0084f4 100%);
+      padding: 40px 20px 30px;
+      color: white;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+    }
+
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 15px 10px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 12px;
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      display: block;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* 生命肝脏展示区 */
+    .liver-container {
+      margin: 30px 20px;
+      padding: 30px 20px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .liver-title {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .liver-display {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .liver-image {
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+      border-radius: 50% 40% 50% 40%;
+      position: relative;
+      animation: healthyBeat 2s ease-in-out infinite;
+      box-shadow: 0 0 30px rgba(192, 108, 132, 0.5);
+    }
+
+    .liver-image::before {
+      content: '🫀';
+      font-size: 80px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    }
+
+    @keyframes healthyBeat {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 30px rgba(192, 108, 132, 0.5);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px rgba(192, 108, 132, 0.7);
+      }
+    }
+
+    .liver-tooltip {
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.75);
+      padding: 8px 16px;
+      border-radius: 8px;
+      white-space: nowrap;
+      font-size: 12px;
+      color: #fff;
+    }
+
+    .health-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 220px;
+      height: 220px;
+      border: 3px solid rgba(0, 82, 217, 0.2);
+      border-top-color: #0052d9;
+      border-radius: 50%;
+      animation: rotate 3s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    .liver-stage {
+      text-align: center;
+    }
+
+    .stage-label {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      color: #0052d9;
+      margin-bottom: 5px;
+    }
+
+    .stage-desc {
+      display: block;
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* 每日打卡区 */
+    .action-section {
+      margin: 0 20px 30px;
+    }
+
+    .primary-action {
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(135deg, #0052d9 0%, #0084f4 100%);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(0, 82, 217, 0.3);
+      transition: all 0.3s;
+    }
+
+    .primary-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 82, 217, 0.4);
+    }
+
+    .primary-action:disabled {
+      background: #e0e0e0;
+      color: #999;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .secondary-action {
+      text-align: center;
+    }
+
+    .secondary-btn {
+      background: transparent;
+      border: 1px solid #ddd;
+      padding: 10px 30px;
+      border-radius: 20px;
+      color: #666;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .secondary-btn:hover {
+      border-color: #0052d9;
+      color: #0052d9;
+    }
+
+    /* 快速入口卡片 */
+    .quick-access {
+      margin: 0 20px 30px;
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .access-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .access-item:last-child {
+      border-bottom: none;
+    }
+
+    .access-item:hover {
+      background: #f8f8f8;
+    }
+
+    .access-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-right: 15px;
+    }
+
+    .access-item:nth-child(2) .access-icon {
+      background: linear-gradient(135deg, #0052d9 0%, #0084f4 100%);
+    }
+
+    .access-content {
+      flex: 1;
+    }
+
+    .access-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .access-note {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .access-arrow {
+      color: #ccc;
+      font-size: 20px;
+    }
+
+    /* SOS 紧急按钮 */
+    .sos-button {
+      position: fixed;
+      right: 20px;
+      bottom: 100px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #ff4757 0%, #ff6348 100%);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4);
+      cursor: pointer;
+      animation: sosGlow 2s infinite;
+      z-index: 1000;
+    }
+
+    @keyframes sosGlow {
+      0%, 100% { box-shadow: 0 4px 20px rgba(255, 71, 87, 0.4); }
+      50% { box-shadow: 0 4px 30px rgba(255, 71, 87, 0.8); }
+    }
+
+    .sos-icon {
+      font-size: 24px;
+      color: white;
+      margin-bottom: 2px;
+    }
+
+    .sos-text {
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    /* 底部导航栏 */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 414px;
+      margin: 0 auto;
+      height: 60px;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 999;
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #999;
+      transition: color 0.3s;
+    }
+
+    .tab-item.active {
+      color: #0052d9;
+    }
+
+    .tab-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .tab-label {
+      font-size: 11px;
+    }
+
+    /* 金币动画 */
+    .coin-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      display: none;
+    }
+
+    .coin-animation.active {
+      display: block;
+    }
+
+    .coin {
+      position: absolute;
+      font-size: 30px;
+      animation: coinFall 2s ease-in forwards;
+    }
+
+    @keyframes coinFall {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 顶部状态栏 -->
+    <div class="header">
+      <div class="stats-row">
+        <div class="stat-item">
+          <span class="stat-label">清醒天数</span>
+          <span class="stat-value">15 天</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">省下的钱</span>
+          <span class="stat-value">¥450</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">减少卡路里</span>
+          <span class="stat-value">3200 kcal</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 生命肝脏展示区 -->
+    <div class="liver-container">
+      <div class="liver-title">我的生命肝脏</div>
+      <div class="liver-display">
+        <div class="health-ring"></div>
+        <div class="liver-image"></div>
+        <div class="liver-tooltip">脂肪肝风险已降低 15%</div>
+      </div>
+      <div class="liver-stage">
+        <span class="stage-label">🌱 修复期</span>
+        <span class="stage-desc">肝脏正在努力修复中，继续保持！</span>
+      </div>
+    </div>
+
+    <!-- 每日打卡区 -->
+    <div class="action-section">
+      <button class="primary-action" onclick="handleCheckIn()">
+        ✓ 今日清醒打卡
+      </button>
+      <div class="secondary-action">
+        <button class="secondary-btn" onclick="recordDrink()">记录饮酒</button>
+      </div>
+    </div>
+
+    <!-- 快速入口卡片 -->
+    <div class="quick-access">
+      <div class="access-item" onclick="location.href='simulation-lab.html'">
+        <div class="access-icon">🧪</div>
+        <div class="access-content">
+          <div class="access-title">酒精后果模拟室</div>
+          <div class="access-note">想喝？先来这里体验后果</div>
+        </div>
+        <div class="access-arrow">›</div>
+      </div>
+      <div class="access-item" onclick="location.href='coach.html'">
+        <div class="access-icon">🤖</div>
+        <div class="access-content">
+          <div class="access-title">AI 戒酒教练</div>
+          <div class="access-note">24小时情感陪伴</div>
+        </div>
+        <div class="access-arrow">›</div>
+      </div>
+    </div>
+
+    <!-- SOS 紧急按钮 -->
+    <div class="sos-button" onclick="showSOS()">
+      <div class="sos-icon">🆘</div>
+      <div class="sos-text">SOS</div>
+    </div>
+
+    <!-- 金币动画容器 -->
+    <div class="coin-animation" id="coinAnimation"></div>
+
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+      <div class="tab-item active">
+        <div class="tab-icon">🏠</div>
+        <div class="tab-label">首页</div>
+      </div>
+      <div class="tab-item" onclick="location.href='coach.html'">
+        <div class="tab-icon">💬</div>
+        <div class="tab-label">AI教练</div>
+      </div>
+      <div class="tab-item" onclick="location.href='community.html'">
+        <div class="tab-icon">👥</div>
+        <div class="tab-label">社区</div>
+      </div>
+      <div class="tab-item" onclick="location.href='profile.html'">
+        <div class="tab-icon">👤</div>
+        <div class="tab-label">我的</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function handleCheckIn() {
+      // 显示金币动画
+      const container = document.getElementById('coinAnimation');
+      container.classList.add('active');
+
+      for (let i = 0; i < 10; i++) {
+        const coin = document.createElement('div');
+        coin.className = 'coin';
+        coin.textContent = '💰';
+        coin.style.left = Math.random() * window.innerWidth + 'px';
+        coin.style.animationDelay = i * 0.1 + 's';
+        container.appendChild(coin);
+      }
+
+      setTimeout(() => {
+        container.classList.remove('active');
+        container.innerHTML = '';
+        alert('打卡成功！清醒天数 +1 🎉');
+      }, 2000);
+    }
+
+    function recordDrink() {
+      if (confirm('确认记录饮酒吗？这将重置清醒天数。')) {
+        alert('已记录。让我们一起分析原因，重新开始吧。');
+      }
+    }
+
+    function showSOS() {
+      alert('紧急干预功能：\n1. 呼吸练习 (4-7-8 呼吸法)\n2. 正念音频\n3. 一键求助');
+    }
+  </script>
+</body>
+</html>

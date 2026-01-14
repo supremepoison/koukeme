@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>互助社区 - 清醒时光</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+      background: #f5f5f5;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      max-width: 414px;
+      margin: 0 auto;
+      height: 100vh;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    /* 顶部导航 */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #0052d9 0%, #0084f4 100%);
+      color: white;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .post-btn {
+      padding: 6px 16px;
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .post-btn:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    /* 标签栏 */
+    .tabs {
+      display: flex;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 20px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 15px 0;
+      text-align: center;
+      color: #666;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .tab.active {
+      color: #0052d9;
+      font-weight: bold;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 3px;
+      background: #0052d9;
+      border-radius: 3px 3px 0 0;
+    }
+
+    /* 内容区域 */
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 15px;
+    }
+
+    /* 帖子卡片 */
+    .post-card {
+      background: white;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+    }
+
+    .post-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 2px;
+    }
+
+    .user-status {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .sober-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+      border-radius: 10px;
+      font-size: 11px;
+      margin-left: 5px;
+    }
+
+    .post-content {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    .post-tags {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      background: #f3f4f6;
+      border-radius: 12px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .post-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .action-btn:hover {
+      color: #0052d9;
+    }
+
+    .action-btn.active {
+      color: #ff6b9d;
+    }
+
+    .action-icon {
+      font-size: 18px;
+    }
+
+    /* 鼓励卡片 */
+    .encouragement-card {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 15px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 82, 217, 0.1);
+    }
+
+    .encouragement-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .encouragement-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #0369a1;
+      margin-bottom: 8px;
+    }
+
+    .encouragement-text {
+      font-size: 14px;
+      color: #075985;
+      line-height: 1.6;
+    }
+
+    /* 悬浮发帖按钮 */
+    .floating-post-btn {
+      position: fixed;
+      right: 20px;
+      bottom: 80px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
+      cursor: pointer;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+
+    .floating-post-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .floating-post-btn-icon {
+      font-size: 28px;
+      color: white;
+    }
+
+    /* 底部导航栏 */
+    .tab-bar {
+      display: flex;
+      justify-content: space-around;
+      background: white;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      padding: 10px 0;
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #999;
+      transition: color 0.3s;
+    }
+
+    .tab-item.active {
+      color: #0052d9;
+    }
+
+    .tab-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .tab-label {
+      font-size: 11px;
+    }
+
+    /* 匿名提示 */
+    .anonymous-tip {
+      text-align: center;
+      padding: 10px;
+      background: #fff7ed;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #c2410c;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+      <div class="nav-title">互助社区</div>
+      <button class="post-btn" onclick="createPost()">✏️ 发帖</button>
+    </div>
+
+    <!-- 标签栏 -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('tree')">匿名树洞</div>
+      <div class="tab" onclick="switchTab('moment')">清醒时刻</div>
+      <div class="tab" onclick="switchTab('support')">互助点亮</div>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="content-area" id="contentArea">
+      <!-- 匿名提示 -->
+      <div class="anonymous-tip">
+        🔒 所有帖子均匿名发布，请放心分享
+      </div>
+
+      <!-- 鼓励卡片 -->
+      <div class="encouragement-card">
+        <div class="encouragement-icon">🌟</div>
+        <div class="encouragement-title">你并不孤单</div>
+        <div class="encouragement-text">
+          这里有 <strong>1,234</strong> 位伙伴正在一起努力<br>
+          今日共打卡 <strong>856</strong> 次
+        </div>
+      </div>
+
+      <!-- 帖子列表 -->
+      <div class="post-card">
+        <div class="post-header">
+          <div class="user-avatar">🦁</div>
+          <div class="user-info">
+            <div class="user-name">
+              匿名狮子
+              <span class="sober-badge">清醒 30 天</span>
+            </div>
+            <div class="user-status">2 小时前</div>
+          </div>
+        </div>
+        <div class="post-content">
+          今天是我清醒的第 30 天！一个月前的我完全想象不到能坚持到今天。感谢这个社区，每次想喝酒的时候来这里看看大家的故事，就有了继续前进的力量。💪
+        </div>
+        <div class="post-tags">
+          <span class="tag">#里程碑</span>
+          <span class="tag">#30天挑战</span>
+        </div>
+        <div class="post-actions">
+          <button class="action-btn" onclick="toggleLike(this)">
+            <span class="action-icon">💡</span>
+            <span>点亮 (42)</span>
+          </button>
+          <button class="action-btn">
+            <span class="action-icon">💬</span>
+            <span>评论 (15)</span>
+          </button>
+          <button class="action-btn">
+            <span class="action-icon">🤗</span>
+            <span>鼓励</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-header">
+          <div class="user-avatar" style="background: linear-gradient(135deg, #0052d9 0%, #0084f4 100%);">🐻</div>
+          <div class="user-info">
+            <div class="user-name">
+              匿名熊猫
+              <span class="sober-badge">清醒 7 天</span>
+            </div>
+            <div class="user-status">5 小时前</div>
+          </div>
+        </div>
+        <div class="post-content">
+          昨晚朋友聚会，所有人都在劝酒。我用了 AI 教练教的"吃头孢"话术，没想到真的管用！大家也没有再劝我。感觉自己变强了。✨
+        </div>
+        <div class="post-tags">
+          <span class="tag">#拒酒成功</span>
+          <span class="tag">#社交场景</span>
+        </div>
+        <div class="post-actions">
+          <button class="action-btn" onclick="toggleLike(this)">
+            <span class="action-icon">💡</span>
+            <span>点亮 (28)</span>
+          </button>
+          <button class="action-btn">
+            <span class="action-icon">💬</span>
+            <span>评论 (8)</span>
+          </button>
+          <button class="action-btn">
+            <span class="action-icon">🤗</span>
+            <span>鼓励</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-header">
+          <div class="user-avatar" style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">🐸</div>
+          <div class="user-info">
+            <div class="user-name">
+              匿名青蛙
+              <span class="sober-badge">清醒 3 天</span>
+            </div>
+            <div class="user-status">8 小时前</div>
+          </div>
+        </div>
+        <div class="post-content">
+          今天差点破戒...打开了酒精模拟室，体验了一遍喝醉的感觉。看到那个黑化的肝脏，我突然清醒了。真的很感谢这个功能，救了我一命。🙏
+        </div>
+        <div class="post-tags">
+          <span class="tag">#差点破戒</span>
+          <span class="tag">#模拟室救命</span>
+        </div>
+        <div class="post-actions">
+          <button class="action-btn active" onclick="toggleLike(this)">
+            <span class="action-icon">💡</span>
+            <span>点亮 (55)</span>
+          </button>
+          <button class="action-btn">
+            <span class="action-icon">💬</span>
+            <span>评论 (20)</span>
+          </button>
+          <button class="action-btn">
+            <span class="action-icon">🤗</span>
+            <span>鼓励</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-header">
+          <div class="user-avatar" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">🦊</div>
+          <div class="user-info">
+            <div class="user-name">
+              匿名狐狸
+              <span class="sober-badge">清醒 90 天</span>
+            </div>
+            <div class="user-status">12 小时前</div>
+          </div>
+        </div>
+        <div class="post-content">
+          给新人们的建议：前三天是最难的，熬过去就好了。不要给自己太大压力，一天一天来。破戒了也不要放弃，重新开始就好。我破戒了 5 次才成功坚持到现在。加油！💪
+        </div>
+        <div class="post-tags">
+          <span class="tag">#经验分享</span>
+          <span class="tag">#给新人</span>
+          <span class="tag">#90天</span>
+        </div>
+        <div class="post-actions">
+          <button class="action-btn" onclick="toggleLike(this)">
+            <span class="action-icon">💡</span>
+            <span>点亮 (89)</span>
+          </button>
+          <button class="action-btn">
+            <span class="action-icon">💬</span>
+            <span>评论 (34)</span>
+          </button>
+          <button class="action-btn">
+            <span class="action-icon">🤗</span>
+            <span>鼓励</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 悬浮发帖按钮 -->
+    <div class="floating-post-btn" onclick="createPost()">
+      <div class="floating-post-btn-icon">✏️</div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="tab-bar">
+      <div class="tab-item" onclick="location.href='index.html'">
+        <div class="tab-icon">🏠</div>
+        <div class="tab-label">首页</div>
+      </div>
+      <div class="tab-item" onclick="location.href='coach.html'">
+        <div class="tab-icon">💬</div>
+        <div class="tab-label">AI教练</div>
+      </div>
+      <div class="tab-item active">
+        <div class="tab-icon">👥</div>
+        <div class="tab-label">社区</div>
+      </div>
+      <div class="tab-item" onclick="location.href='profile.html'">
+        <div class="tab-icon">👤</div>
+        <div class="tab-label">我的</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      // 切换标签激活状态
+      document.querySelectorAll('.tabs .tab').forEach(t => {
+        t.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+
+      // 这里可以加载不同标签的内容
+      if (tab === 'moment') {
+        alert('加载"清醒时刻"内容...\n展示用户的清醒打卡记录和成就分享');
+      } else if (tab === 'support') {
+        alert('加载"互助点亮"内容...\n展示需要鼓励的伙伴和点亮记录');
+      }
+    }
+
+    function toggleLike(button) {
+      button.classList.toggle('active');
+
+      const countText = button.querySelector('span:last-child');
+      const currentCount = parseInt(countText.textContent.match(/\d+/)[0]);
+
+      if (button.classList.contains('active')) {
+        countText.textContent = `点亮 (${currentCount + 1})`;
+
+        // 显示鼓励动画
+        showEncouragement();
+      } else {
+        countText.textContent = `点亮 (${currentCount - 1})`;
+      }
+    }
+
+    function showEncouragement() {
+      const messages = [
+        '你的鼓励被送达了！💡',
+        '又点亮了一盏灯！✨',
+        '你的支持很重要！🌟',
+        '温暖正在传递！🤗'
+      ];
+
+      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+      alert(randomMessage);
+    }
+
+    function createPost() {
+      alert('发帖功能\n\n✏️ 分享你的故事\n🔒 完全匿名，放心表达\n💡 获得社区的支持与鼓励\n\n请输入你想分享的内容...');
+    }
+  </script>
+</body>
+</html>

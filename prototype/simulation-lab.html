@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>酒精后果模拟室 - 清醒时光</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+      background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1e 100%);
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 414px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    /* 顶部导航 */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      padding: 15px 20px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .nav-title {
+      flex: 1;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .nav-warning {
+      font-size: 12px;
+      color: #ff6348;
+    }
+
+    /* 实验室标题区 */
+    .lab-header {
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .lab-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .lab-subtitle {
+      font-size: 14px;
+      color: #999;
+    }
+
+    /* 人体透视区 */
+    .body-view {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .human-silhouette {
+      width: 150px;
+      height: 280px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 50px 50px 20px 20px;
+      position: relative;
+      backdrop-filter: blur(5px);
+    }
+
+    .organ-liver {
+      position: absolute;
+      top: 100px;
+      right: 30px;
+      width: 60px;
+      height: 80px;
+      background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      animation: liverPulse 2s ease-in-out infinite;
+      box-shadow: 0 0 20px rgba(255, 107, 157, 0.6);
+      transition: all 0.5s;
+    }
+
+    .organ-liver.damaged {
+      background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+      animation: liverShake 0.5s infinite;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+    }
+
+    @keyframes liverPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes liverShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+    }
+
+    .health-bar-container {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+    }
+
+    .health-label {
+      font-size: 12px;
+      color: #fff;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    .health-bar {
+      width: 100%;
+      height: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .health-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4ade80 0%, #22c55e 100%);
+      transition: width 0.5s, background 0.5s;
+      border-radius: 10px;
+    }
+
+    .health-fill.critical {
+      background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+    }
+
+    /* 酒类选择区 */
+    .drinks-section {
+      padding: 20px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      color: #ccc;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .drinks-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .drink-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .drink-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 107, 157, 0.8);
+      box-shadow: 0 5px 20px rgba(255, 107, 157, 0.3);
+    }
+
+    .drink-card.selected {
+      border-color: #ff6b9d;
+      background: rgba(255, 107, 157, 0.2);
+    }
+
+    .drink-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .drink-name {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .drink-damage {
+      font-size: 12px;
+      color: #ff6348;
+    }
+
+    /* 杯子展示区 */
+    .glass-section {
+      padding: 20px;
+      text-align: center;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .glass-container {
+      position: relative;
+      width: 120px;
+      height: 150px;
+      margin: 20px auto;
+    }
+
+    .glass {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .liquid {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 0%;
+      background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+      transition: height 1s ease-out;
+      border-radius: 0 0 18px 18px;
+    }
+
+    .glass-btn {
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 10px 5px;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+    }
+
+    .glass-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 107, 157, 0.5);
+    }
+
+    .glass-btn:active {
+      transform: scale(0.95);
+    }
+
+    .glass-btn.drink-btn {
+      background: linear-gradient(135deg, #0052d9 0%, #0084f4 100%);
+    }
+
+    .glass-btn.water-btn {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    }
+
+    .press-hint {
+      font-size: 12px;
+      color: #999;
+      margin-top: 10px;
+    }
+
+    /* 混饮警告 */
+    .combo-warning {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(255, 0, 0, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      z-index: 9999;
+      animation: warningPop 0.5s ease-out forwards;
+      box-shadow: 0 0 50px rgba(255, 0, 0, 0.8);
+    }
+
+    @keyframes warningPop {
+      0% { transform: translate(-50%, -50%) scale(0); }
+      50% { transform: translate(-50%, -50%) scale(1.1); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .warning-icon {
+      font-size: 60px;
+      margin-bottom: 15px;
+    }
+
+    .warning-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .warning-text {
+      font-size: 14px;
+    }
+
+    /* 模糊效果层 */
+    .blur-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(0px);
+      transition: backdrop-filter 0.5s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .blur-overlay.active {
+      backdrop-filter: blur(10px);
+    }
+
+    /* 醉酒特效 */
+    .drunk-effects {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    .drunk-effects.active {
+      animation: drunkSway 2s infinite;
+    }
+
+    @keyframes drunkSway {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(1deg); }
+      75% { transform: rotate(-1deg); }
+    }
+
+    /* 统计信息 */
+    .stats-panel {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      margin: 20px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .stat-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .stat-label {
+      color: #999;
+    }
+
+    .stat-value {
+      color: white;
+      font-weight: bold;
+    }
+
+    /* 退出按钮 */
+    .exit-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 40px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 25px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 导航栏 -->
+    <div class="nav-bar">
+      <button class="back-btn" onclick="location.href='index.html'">‹</button>
+      <div class="nav-title">
+        <div>酒精后果模拟室</div>
+        <div class="nav-warning">⚠️ 虚拟体验 · 真实后果</div>
+      </div>
+      <div style="width: 34px;"></div>
+    </div>
+
+    <!-- 实验室标题 -->
+    <div class="lab-header">
+      <div class="lab-title">🧪 虚拟宣泄实验室</div>
+      <div class="lab-subtitle">在这里体验后果，在现实中保持清醒</div>
+    </div>
+
+    <!-- 人体透视图 -->
+    <div class="body-view">
+      <div class="human-silhouette">
+        <div class="health-bar-container">
+          <div class="health-label">肝脏健康度</div>
+          <div class="health-bar">
+            <div class="health-fill" id="healthFill" style="width: 100%;"></div>
+          </div>
+        </div>
+        <div class="organ-liver" id="liver"></div>
+      </div>
+    </div>
+
+    <!-- 酒类选择 -->
+    <div class="drinks-section">
+      <div class="section-title">选择你想模拟的酒类</div>
+      <div class="drinks-grid">
+        <div class="drink-card" onclick="selectDrink('beer', 10, '🍺', '#fbbf24')">
+          <div class="drink-icon">🍺</div>
+          <div class="drink-name">啤酒</div>
+          <div class="drink-damage">伤害: 低</div>
+        </div>
+        <div class="drink-card" onclick="selectDrink('wine', 20, '🍷', '#dc2626')">
+          <div class="drink-icon">🍷</div>
+          <div class="drink-name">红酒</div>
+          <div class="drink-damage">伤害: 中</div>
+        </div>
+        <div class="drink-card" onclick="selectDrink('whiskey', 35, '🥃', '#f59e0b')">
+          <div class="drink-icon">🥃</div>
+          <div class="drink-name">威士忌</div>
+          <div class="drink-damage">伤害: 高</div>
+        </div>
+        <div class="drink-card" onclick="selectDrink('baijiu', 50, '🍶', '#f3f4f6')">
+          <div class="drink-icon">🍶</div>
+          <div class="drink-name">白酒</div>
+          <div class="drink-damage">伤害: 极高</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 杯子操作区 -->
+    <div class="glass-section">
+      <div class="section-title" id="glassTitle">👆 请先选择一种酒类</div>
+      <div class="glass-container" id="glassContainer" style="display: none;">
+        <div class="glass">
+          <div class="liquid" id="liquid"></div>
+        </div>
+      </div>
+      <div id="actionButtons" style="display: none;">
+        <button class="glass-btn" onclick="pourDrink()">倒酒</button>
+        <button class="glass-btn drink-btn" onmousedown="startDrinking()" onmouseup="stopDrinking()" ontouchstart="startDrinking()" ontouchend="stopDrinking()">长按饮用</button>
+        <button class="glass-btn water-btn" onclick="drinkWater()">喝水解酒</button>
+        <div class="press-hint">按住"长按饮用"模拟喝酒</div>
+      </div>
+    </div>
+
+    <!-- 统计面板 -->
+    <div class="stats-panel">
+      <div class="stat-row">
+        <span class="stat-label">已饮用酒精量</span>
+        <span class="stat-value" id="alcoholAmount">0 ml</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">累计伤害值</span>
+        <span class="stat-value" id="damageAmount">0</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">混饮警告</span>
+        <span class="stat-value" id="mixStatus">未触发</span>
+      </div>
+    </div>
+
+    <!-- 模糊效果层 -->
+    <div class="blur-overlay" id="blurOverlay"></div>
+    <div class="drunk-effects" id="drunkEffects"></div>
+
+    <!-- 退出按钮 -->
+    <button class="exit-btn" onclick="exitLab()">退出模拟室</button>
+  </div>
+
+  <script>
+    let currentDrink = null;
+    let lastDrinkType = null;
+    let health = 100;
+    let totalDamage = 0;
+    let alcoholAmount = 0;
+    let isComboTriggered = false;
+    let drinkingInterval = null;
+
+    function selectDrink(type, damage, icon, color) {
+      // 检测混饮
+      if (lastDrinkType && lastDrinkType !== type && totalDamage > 0) {
+        triggerComboWarning();
+      }
+
+      currentDrink = { type, damage, icon, color };
+      lastDrinkType = type;
+
+      // 更新UI
+      document.querySelectorAll('.drink-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+      event.currentTarget.classList.add('selected');
+
+      document.getElementById('glassTitle').textContent = `已选择: ${icon} ${type}`;
+      document.getElementById('glassContainer').style.display = 'block';
+      document.getElementById('actionButtons').style.display = 'block';
+    }
+
+    function pourDrink() {
+      if (!currentDrink) return;
+
+      const liquid = document.getElementById('liquid');
+      liquid.style.background = `linear-gradient(180deg, ${currentDrink.color} 0%, ${currentDrink.color}dd 100%)`;
+      liquid.style.height = '70%';
+
+      // 液体声效提示
+      setTimeout(() => {
+        alert('咕嘟咕嘟... 酒已倒满 🍷');
+      }, 500);
+    }
+
+    function startDrinking() {
+      if (!currentDrink) return;
+
+      const liquid = document.getElementById('liquid');
+      if (liquid.style.height === '0%' || !liquid.style.height) {
+        alert('请先倒酒！');
+        return;
+      }
+
+      drinkingInterval = setInterval(() => {
+        // 减少酒液
+        let currentHeight = parseInt(liquid.style.height) || 70;
+        if (currentHeight > 0) {
+          liquid.style.height = (currentHeight - 2) + '%';
+
+          // 增加酒精摄入
+          alcoholAmount += 10;
+          document.getElementById('alcoholAmount').textContent = alcoholAmount + ' ml';
+
+          // 造成伤害
+          applyDamage(currentDrink.damage * 0.3);
+        }
+      }, 100);
+    }
+
+    function stopDrinking() {
+      if (drinkingInterval) {
+        clearInterval(drinkingInterval);
+        drinkingInterval = null;
+      }
+    }
+
+    function applyDamage(damage) {
+      health -= damage;
+      totalDamage += damage;
+
+      if (health < 0) health = 0;
+
+      // 更新健康条
+      const healthFill = document.getElementById('healthFill');
+      healthFill.style.width = health + '%';
+
+      if (health < 30) {
+        healthFill.classList.add('critical');
+      }
+
+      // 更新肝脏状态
+      const liver = document.getElementById('liver');
+      if (health < 50) {
+        liver.classList.add('damaged');
+      }
+
+      // 更新统计
+      document.getElementById('damageAmount').textContent = Math.round(totalDamage);
+
+      // 视觉效果
+      const blurOverlay = document.getElementById('blurOverlay');
+      const drunkEffects = document.getElementById('drunkEffects');
+
+      if (health < 50) {
+        blurOverlay.classList.add('active');
+        drunkEffects.classList.add('active');
+      }
+
+      // 模拟震动（提示用户）
+      if (navigator.vibrate && health < 70) {
+        navigator.vibrate(200);
+      }
+
+      // 危险警告
+      if (health < 20) {
+        alert('⚠️ 警告：肝脏严重受损！请立即停止并喝水解酒！');
+      }
+
+      // 休克
+      if (health === 0) {
+        setTimeout(() => {
+          alert('💀 模拟休克！你在虚拟世界"醒来"了... \n\n记住：在现实中，肝脏只有一个，无法重来。');
+          resetLab();
+        }, 500);
+      }
+    }
+
+    function triggerComboWarning() {
+      if (isComboTriggered) return;
+      isComboTriggered = true;
+
+      const warning = document.createElement('div');
+      warning.className = 'combo-warning';
+      warning.innerHTML = `
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-title">混饮暴击！</div>
+        <div class="warning-text">混饮导致吸收率提升 200%<br>肝脏超负荷运转！</div>
+      `;
+      document.body.appendChild(warning);
+
+      // 伤害翻倍
+      applyDamage(currentDrink.damage * 2);
+
+      document.getElementById('mixStatus').textContent = '已触发 ⚠️';
+      document.getElementById('mixStatus').style.color = '#ff4757';
+
+      setTimeout(() => {
+        warning.remove();
+      }, 3000);
+    }
+
+    function drinkWater() {
+      // 恢复效果
+      health = Math.min(100, health + 20);
+
+      const healthFill = document.getElementById('healthFill');
+      healthFill.style.width = health + '%';
+
+      if (health >= 30) {
+        healthFill.classList.remove('critical');
+      }
+
+      const liver = document.getElementById('liver');
+      if (health >= 50) {
+        liver.classList.remove('damaged');
+      }
+
+      // 清除醉酒效果
+      if (health > 50) {
+        document.getElementById('blurOverlay').classList.remove('active');
+        document.getElementById('drunkEffects').classList.remove('active');
+      }
+
+      alert('💧 喝水中... 感觉好多了！\n\n健康值 +20');
+    }
+
+    function resetLab() {
+      health = 100;
+      totalDamage = 0;
+      alcoholAmount = 0;
+      isComboTriggered = false;
+      lastDrinkType = null;
+      currentDrink = null;
+
+      document.getElementById('healthFill').style.width = '100%';
+      document.getElementById('healthFill').classList.remove('critical');
+      document.getElementById('liver').classList.remove('damaged');
+      document.getElementById('liquid').style.height = '0%';
+      document.getElementById('alcoholAmount').textContent = '0 ml';
+      document.getElementById('damageAmount').textContent = '0';
+      document.getElementById('mixStatus').textContent = '未触发';
+      document.getElementById('blurOverlay').classList.remove('active');
+      document.getElementById('drunkEffects').classList.remove('active');
+
+      document.querySelectorAll('.drink-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+    }
+
+    function exitLab() {
+      if (totalDamage > 0) {
+        alert('📊 模拟报告\n\n' +
+              `总饮酒量: ${alcoholAmount} ml\n` +
+              `累计伤害: ${Math.round(totalDamage)}\n` +
+              `最终健康: ${Math.round(health)}%\n\n` +
+              '💡 提示：在虚拟世界你可以重来，\n但现实的肝脏只有这一个。');
+      }
+      location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
